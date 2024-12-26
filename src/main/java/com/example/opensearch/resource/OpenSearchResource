@@ -1,0 +1,33 @@
+package com.example.openSearch.resource;
+
+import io.quarkus.runtime.Startup;
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestHighLevelClient;
+import org.opensearch.client.Request;
+import org.opensearch.client.Response;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+@Path("/search")
+public class OpenSearchResource {
+
+    private RestHighLevelClient client;
+
+    public OpenSearchResource() {
+        client = new RestHighLevelClient(
+            RestClient.builder(new HttpHost("10.88.0.1", 9200, "https"))
+        );
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String search() throws Exception {
+        Request request = new Request("GET", "/_search");
+        Response response = client.getLowLevelClient().performRequest(request);
+        return EntityUtils.toString(response.getEntity());
+    }
+}
+

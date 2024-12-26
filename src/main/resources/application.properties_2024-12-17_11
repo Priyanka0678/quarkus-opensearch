@@ -1,0 +1,7 @@
+quarkus.opensearch.hosts=http://localhost:9200
+quarkus.opensearch.username=swati
+quarkus.opensearch.password=swati
+#opensearch.host=localhost
+#opensearch.port=9200
+
+

@@ -1,0 +1,42 @@
+package com.example.clients;
+
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.opensearch.core.SearchRequest;
+import org.opensearch.client.opensearch.core.SearchResponse;
+import org.opensearch.client.opensearch._types.query_dsl.MatchAllQuery;
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestClientBuilder;
+import org.opensearch.client.json.jackson.JacksonJsonpMapper;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.io.IOException;
+
+@ApplicationScoped
+public class OpenSearchClientService {
+
+    private final OpenSearchClient client;
+
+    // Updated Constructor
+    public OpenSearchClientService() {
+        // Create the RestClientBuilder to connect to OpenSearch
+        RestClientBuilder builder = RestClient.builder(
+            new org.apache.http.HttpHost("10.88.0.1", 9200, "https")
+        );
+
+        // Create the OpenSearch client using RestClient
+        this.client = new OpenSearchClient(builder.build());
+    }
+
+    // Perform a search query
+    public SearchResponse<Object> search(String indexName) throws IOException {
+        // Build the search request
+        SearchRequest searchRequest = new SearchRequest.Builder()
+                .index(indexName)
+                .query(new MatchAllQuery.Builder().build()._toQuery())
+                .build();
+
+        // Execute the search query and return the response
+        return client.search(searchRequest, Object.class);
+    }
+}
+

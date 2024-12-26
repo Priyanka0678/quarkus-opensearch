@@ -1,0 +1,31 @@
+package com.example;
+
+import org.opensearch.client.RequestOptions;
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestClientBuilder;
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.transport.RestClientTransport;
+import org.opensearch.client.json.jackson.JacksonJsonpMapper;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+
+@ApplicationScoped
+public class OpenSearchClientProducer {
+
+    @Produces
+    public OpenSearchClient createClient() {
+        RestClient restClient = RestClient.builder(
+            new org.apache.http.HttpHost("10.88.0.1", 9200, "https")
+        ).build();
+
+        // Wrap RestClient in RestClientTransport
+        RestClientTransport transport = new RestClientTransport(
+            restClient, new JacksonJsonpMapper()
+        );
+
+        // Create OpenSearchClient
+        return new OpenSearchClient(transport);
+    }
+}
+

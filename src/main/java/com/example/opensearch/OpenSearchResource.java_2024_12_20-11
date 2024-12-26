@@ -1,0 +1,29 @@
+package com.example.opensearch;
+
+import javax.inject.Inject;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+@Path("/opensearch")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class OpenSearchResource {
+
+    @Inject
+    OpenSearchService openSearchService;
+
+    @GET
+    @Path("/{index}/{id}/{field}")
+    public Response getFieldData(@PathParam("index") String index,
+                                 @PathParam("id") String id,
+                                 @PathParam("field") String field) {
+        try {
+            String result = openSearchService.getFieldData(index, id, field);
+            return Response.ok(result).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+        }
+    }
+}
+

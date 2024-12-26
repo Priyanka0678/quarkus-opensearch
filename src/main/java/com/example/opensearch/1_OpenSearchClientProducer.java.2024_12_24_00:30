@@ -1,0 +1,27 @@
+package com.example;
+
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestClientBuilder;
+import org.opensearch.client.opensearch.OpenSearchClient;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
+
+@ApplicationScoped
+public class OpenSearchClientProducer {
+
+    @Produces
+    public OpenSearchClient createClient() {
+        // Create the RestClient for OpenSearch
+        RestClientBuilder builder = RestClient.builder(
+            new org.apache.http.HttpHost("10.88.0.1", 9200, "https")
+        );
+
+        // Build the RestClient
+        RestClient restClient = builder.build();
+
+        // Create and return OpenSearchClient using RestClient
+        return new OpenSearchClient(restClient);
+    }
+}
+

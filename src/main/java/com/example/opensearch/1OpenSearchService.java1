@@ -1,0 +1,41 @@
+package com.example.opensearch;
+
+import org.apache.http.HttpHost;
+import org.opensearch.client.RequestOptions;
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestHighLevelClient;
+import org.opensearch.client.core.GetResponse;
+import org.opensearch.common.xcontent.XContentType;
+import javax.enterprise.context.ApplicationScoped;
+import java.io.IOException;
+
+@ApplicationScoped
+public class OpenSearchService {
+
+    private final RestHighLevelClient client;
+
+    public OpenSearchService() {
+        this.client = new RestHighLevelClient(
+            RestClient.builder(new HttpHost("10.88.0.1", 9200, "http"))
+        );
+    }
+
+    public String getFieldData(String index, String id, String field) throws IOException {
+        GetResponse response = client.get(
+            new org.opensearch.client.core.GetRequest(index, id),
+            RequestOptions.DEFAULT
+        );
+
+        if (!response.isExists()) {
+            return "Document not found!";
+        }
+
+        // Extract and return the specific field
+        return response.getSourceAsMap().get(field).toString();
+    }
+
+    public void close() throws IOException {
+        client.close();
+    }
+}
+

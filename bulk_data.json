@@ -1,0 +1,7 @@
+{ "index": { "_index": "my-index5", "_id": "1" } }
+{ "data": { "id": 1, "first_name": "Garrot", "email": "gcolhoun0@mit.edu" } }
+{ "index": { "_index": "my-index5", "_id": "2" } }
+{ "data": { "id": 2, "first_name": "Elaine", "email": "elinnit1@jimdo.com" } }
+{ "index": { "_index": "my-index5", "_id": "3" } }
+{ "data": { "id": 3, "first_name": "Corie", "email": "cdargavel2@berkeley.edu" } }
+

@@ -1,0 +1,51 @@
+package com.example.clients;
+
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.HttpHost;
+import org.opensearch.client.RestClient;
+import org.opensearch.client.RestClientTransport;
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.opensearch.OpenSearchTransport;
+import org.opensearch.client.opensearch._types.query_dsl.MatchAllQuery;
+import org.opensearch.client.opensearch.core.SearchRequest;
+import org.opensearch.client.opensearch.core.SearchResponse;
+import org.opensearch.client.json.jackson.JacksonJsonpMapper;
+
+import javax.enterprise.context.ApplicationScoped;
+import java.io.IOException;
+
+@ApplicationScoped
+public class OpenSearchClient {
+
+    private final OpenSearchClient client;
+
+    public OpenSearchClient() {
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, 
+            new UsernamePasswordCredentials("admin", "Priyanka@123"));
+
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .build();
+
+        RestClient restClient = RestClient.builder(
+                new HttpHost("10.88.0.1", 9200, "https"))
+                .build();
+
+        OpenSearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
+        this.client = new OpenSearchClient(transport);
+    }
+
+    public SearchResponse<Object> search(String indexName) throws IOException {
+        SearchRequest searchRequest = new SearchRequest.Builder()
+                .index(indexName)
+                .query(new MatchAllQuery.Builder().build()._toQuery())
+                .build();
+        return client.search(searchRequest, Object.class);
+    }
+}
+
