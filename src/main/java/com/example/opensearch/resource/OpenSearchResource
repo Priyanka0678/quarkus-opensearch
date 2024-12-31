@@ -1,10 +1,12 @@
 package com.example.openSearch.resource;
 
 import io.quarkus.runtime.Startup;
+import org.apache.http.HttpHost;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.RestHighLevelClient;
 import org.opensearch.client.Request;
 import org.opensearch.client.Response;
+import org.apache.http.util.EntityUtils;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +30,14 @@ public class OpenSearchResource {
         Request request = new Request("GET", "/_search");
         Response response = client.getLowLevelClient().performRequest(request);
         return EntityUtils.toString(response.getEntity());
+    }
+
+    // Resource cleanup
+    @PreDestroy
+    public void close() throws Exception {
+        if (client != null) {
+            client.close();
+        }
     }
 }
 
